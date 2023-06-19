@@ -1,5 +1,3 @@
-<script src="https://cdn.jsdelivr.net/gh/Ferisp/Widget@main/word-counter.js"></script>
-<script>
 counter=function(){
   var value=$("#text").val();
   if (value.length==0){
