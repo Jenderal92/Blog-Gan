@@ -34,40 +34,30 @@ function fetchCredentials(jsonPath) {
     .then(credentials => {
       const clientEmail = credentials.client_email;
       const privateKey = credentials.private_key;
-      const scopes = ['https://www.googleapis.com/auth/indexing'];
 
-      return new google.auth.ServiceAccountAuth(clientEmail, {
-        'privateKey': privateKey,
-        'scopes': scopes
-      });
+      const authOptions = {
+        'credentials': {
+          'client_email': clientEmail,
+          'private_key': privateKey
+        },
+        'scopes': ['https://www.googleapis.com/auth/indexing']
+      };
+
+      return google.auth.getClient(authOptions);
     });
 }
 
 function buildIndexingService(credentials) {
-  return new Promise((resolve, reject) => {
-    const discoveryUrl = 'https://indexing.googleapis.com/$discovery/rest?version=v3';
+  const discoveryUrl = 'https://indexing.googleapis.com/$discovery/rest?version=v3';
 
-    google.apis.discover('indexing', 'v3', discoveryUrl)
-      .then(indexing => {
-        indexing.client.setCredentials(credentials);
-        resolve(indexing);
-      })
-      .catch(error => {
-        reject(error);
-      });
-  });
+  return google.discoverAPI(discoveryUrl)
+    .then(indexing => {
+      return indexing;
+    });
 }
 
 function sendUrlNotification(indexingService, urlNotification) {
-  return new Promise((resolve, reject) => {
-    indexingService.urlNotifications.publish({
-      'body': urlNotification
-    })
-      .then(response => {
-        resolve(response);
-      })
-      .catch(error => {
-        reject(error);
-      });
+  return indexingService.urlNotifications.publish({
+    'body': urlNotification
   });
 }
