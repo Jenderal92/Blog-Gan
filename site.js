@@ -4,7 +4,7 @@ $(function() {
     l = '',
     id = '',
     li = '',
-    m = 5, // Số bình luận hiển thị chính
+    m = 5, // Tampilan utama komentar
     n = str.length,
     k = 0,
     p = 0
